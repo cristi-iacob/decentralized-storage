@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 
-public class FileMaster {
+public class FilesUtils {
     private final String path = "/home/cristi/fisiere_licenta/";
 
     public byte[] multipartToBytes(MultipartFile multipartFile) throws Exception {

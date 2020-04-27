@@ -1,5 +1,5 @@
 package server;
-import files.FileMaster;
+import files.FilesUtils;
 import files.split.BitwiseSplitManager;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +21,7 @@ public class Server {
     public ResponseEntity<Object> uploadFile(@RequestParam("file")MultipartFile file,
                                              @RequestParam("client") String client) throws IOException {
         try {
-            FileMaster fileMaster = new FileMaster();
+            FilesUtils fileMaster = new FilesUtils();
             BitwiseSplitManager splitter = new BitwiseSplitManager();
             List< Byte > bytes[] = splitter.splitFileBytes(file.getBytes(), 5);
 //            Byte[] reverted = splitter.revertSplit(bytes);
