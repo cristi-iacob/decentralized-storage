@@ -3,6 +3,7 @@ package files.split;
 import java.util.List;
 
 public interface SplitManager {
-    List< Byte >[] splitFileBytes(byte[] fileBytes, Integer parts);
+    int getParts();
+    List< Byte >[] splitFileBytes(byte[] fileBytes);
     Byte[] revertSplit(List < Byte >[] splitted);
 }

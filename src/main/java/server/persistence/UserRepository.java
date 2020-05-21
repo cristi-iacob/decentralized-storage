@@ -6,6 +6,8 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import server.model.User;
 
+import java.util.List;
+
 public class UserRepository extends Repository <User> {
     public UserRepository() {
         setMyClass(User.class);
@@ -31,5 +33,19 @@ public class UserRepository extends Repository <User> {
             session.close();
             return ret;
         }
+    }
+
+    public List<User> getAllOnlineUsers() {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+
+        try {
+            return session.createQuery("select user from User user where user.online=true", User.class).getResultList();
+        } catch (HibernateException e) {
+
+        } finally {
+            session.close();
+        }
+
+        return null;
     }
 }

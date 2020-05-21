@@ -4,7 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BitwiseSplitManager implements SplitManager {
-    public List < Byte >[] splitFileBytes(byte[] fileBytes, Integer parts) {
+    private int parts;
+
+    public BitwiseSplitManager(int parts) {
+        this.parts = parts;
+    }
+
+    @Override
+    public int getParts() {
+        return parts;
+    }
+
+    public List < Byte >[] splitFileBytes(byte[] fileBytes) {
         List < Byte > splittedFile[] = new ArrayList[parts];
         for (int i = 0; i < parts; ++ i) {
             splittedFile[i] = new ArrayList<>();
