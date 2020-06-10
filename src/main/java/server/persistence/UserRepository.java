@@ -35,6 +35,29 @@ public class UserRepository extends Repository <User> {
         }
     }
 
+    public User getUserByEmailAndPassword(String email, String password) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = null;
+        User ret = null;
+
+        try {
+            transaction = session.beginTransaction();
+            Query query = session.createQuery("from User where email=:email and password=:password");
+            query.setParameter("email", email);
+            query.setParameter("password", password);
+            ret = (User) query.uniqueResult();
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+            return ret;
+        }
+    }
+
     public List<User> getAllOnlineUsers() {
         Session session = HibernateUtils.getSessionFactory().openSession();
 
@@ -47,5 +70,35 @@ public class UserRepository extends Repository <User> {
         }
 
         return null;
+    }
+
+    public void allonline() {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            Query query = session.createQuery("update User set online=1 where 1=1");
+            query.executeUpdate();
+            transaction.commit();
+        } catch (HibernateException e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
+    }
+
+    public void alloffline() {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            Query query = session.createQuery("update User set online=0 where 1=1");
+            query.executeUpdate();
+            transaction.commit();
+        } catch (HibernateException e) {
+            transaction.rollback();
+        } finally {
+            session.close();
+        }
     }
 }

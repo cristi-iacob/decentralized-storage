@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.view.controller.RegisterController">
+   <children>
+      <Label layoutX="193.0" layoutY="136.0" text="Username" />
+      <Label layoutX="198.0" layoutY="175.0" text="Password" />
+      <Label layoutX="147.0" layoutY="208.0" text="Repeat password" />
+      <Button layoutX="248.0" layoutY="255.0" mnemonicParsing="false" text="Register" />
+      <TextField layoutX="272.0" layoutY="131.0" />
+      <PasswordField layoutX="272.0" layoutY="170.0" />
+      <PasswordField layoutX="272.0" layoutY="203.0" />
+   </children>
+</AnchorPane>
