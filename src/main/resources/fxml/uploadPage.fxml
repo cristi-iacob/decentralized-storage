@@ -11,9 +11,9 @@
             <TableColumn fx:id="addressColumn" prefWidth="229.0" text="Address" />
          </columns>
       </TableView>
-      <Button fx:id="selectFileButton" layoutX="259.0" layoutY="56.0" mnemonicParsing="false" text="Select file" />
+      <Button fx:id="selectFileButton" onAction="#selectFile" layoutX="259.0" layoutY="56.0" mnemonicParsing="false" text="Select file" />
       <Label fx:id="fileLabel" layoutX="248.0" layoutY="97.0" text="No file selected." />
       <Button fx:id="uploadButton" layoutX="269.0" layoutY="123.0" mnemonicParsing="false" onAction="#upload" text="Upload" />
-      <Button fx:id="downloadSectionButton" layoutX="469.0" layoutY="348.0" mnemonicParsing="false" text="Go to Download section" />
+      <Button fx:id="downloadSectionButton" onAction="#goToDownload" layoutX="469.0" layoutY="348.0" mnemonicParsing="false" text="Go to Download section" />
    </children>
 </AnchorPane>

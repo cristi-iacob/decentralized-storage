@@ -72,6 +72,21 @@ public class UserRepository extends Repository <User> {
         return null;
     }
 
+    public List<User> getUsersSortedByTimezone(int timezone) {
+        Session session = HibernateUtils.getSessionFactory().openSession();
+
+        try {
+            Query query = session.createQuery("select user from User user where user.online=true order by abs(user.timezone - :timezone)", User.class);
+            query.setParameter("timezone", timezone);
+            return query.getResultList();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return null;
+    }
+
     public void allonline() {
         Session session = HibernateUtils.getSessionFactory().openSession();
         Transaction transaction = null;

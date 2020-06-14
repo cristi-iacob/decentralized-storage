@@ -7,7 +7,8 @@
    <children>
       <ListView fx:id="uploadedFilesListView" layoutX="14.0" layoutY="72.0" prefHeight="293.0" prefWidth="364.0" />
       <Label layoutX="148.0" layoutY="46.0" text="Uploaded Files" />
-      <Button layoutX="409.0" layoutY="339.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="194.0" text="Go to upload section" />
-      <Button fx:id="downloadButton" onAction="#download" layoutX="406.0" layoutY="72.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="194.0" text="Download selected file" />
+      <Button fx:id="uploadSectionButton" onAction="#goToUpload" layoutX="409.0" layoutY="339.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="194.0" text="Go to upload section" />
+      <Button fx:id="downloadButton" layoutX="406.0" layoutY="72.0" mnemonicParsing="false" onAction="#download" prefHeight="26.0" prefWidth="194.0" text="Download selected file" />
+      <Button fx:id="loadButton" onAction="#populateUploads" layoutX="122.0" layoutY="206.0" mnemonicParsing="false" text="Load Uploaded Files" />
    </children>
 </AnchorPane>

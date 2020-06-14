@@ -1,18 +1,52 @@
 package client.view.controller;
 
+import client.controller.ClientController;
+import client.requests.RequestsSender;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.util.EntityUtils;
+
+import java.io.File;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UploadController {
     @FXML private TableView <MyDataType> informationTable;
     @FXML private Button uploadButton;
+    @FXML private Button selectFileButton;
     @FXML private TableColumn <MyDataType, String> userColumn;
     @FXML private TableColumn <MyDataType, String> addressColumn;
+    @FXML private Label fileLabel;
+    private File selectedFile;
+    private RequestsSender requestsSender;
+    private ClientController clientController;
+
+    public UploadController() {
+        requestsSender = new RequestsSender();
+    }
+
+    public ClientController getClientController() {
+        return clientController;
+    }
+
+    public void setClientController(ClientController clientController) {
+        this.clientController = clientController;
+    }
 
     private class MyDataType {
         private String user;
@@ -41,49 +75,50 @@ public class UploadController {
     }
 
     @FXML void upload() {
-        informationTable.setEditable(true);
-        ObservableList < String > data =
-                FXCollections.observableArrayList(
-                        "user142",
-                        "user385",
-                        "user44",
-                        "user399",
-                        "user17",
-                        "user233",
-                        "user378",
-                        "user461",
-                        "user74",
-                        "user279",
-                        "user203",
-                        "user82",
-                        "user118",
-                        "user495",
-                        "user158"
-                );
-        ObservableList < String > data2 =
-                FXCollections.observableArrayList(
-                        "127.0.0.1:12142",
-                        "127.0.0.1:12385",
-                        "127.0.0.1:12044",
-                        "127.0.0.1:12399",
-                        "127.0.0.1:12017",
-                        "127.0.0.1:12233",
-                        "127.0.0.1:12378",
-                        "127.0.0.1:12461",
-                        "127.0.0.1:12074",
-                        "127.0.0.1:12279",
-                        "127.0.0.1:12203",
-                        "127.0.0.1:12082",
-                        "127.0.0.1:12118",
-                        "127.0.0.1:12495",
-                        "127.0.0.1:12158"
-                );
-        userColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUser()));
-        addressColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getAddress()));
-        ObservableList< MyDataType > list = FXCollections.observableArrayList();
-        for (int i = 0; i < 15; ++ i) {
-            list.add(new MyDataType(data.get(i), data2.get(i)));
+        CloseableHttpResponse response = requestsSender.uploadRequest(selectedFile, clientController.getEmail());
+        if (response.getStatusLine().getStatusCode() == 200) {
+            try {
+                String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+                clientController.addFileToUploaded(responseString.split("~")[0]);
+
+                ArrayList<MyDataType> uploadInformation = new ArrayList<>();
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<String>>(){}.getType();
+                List<String> users = gson.fromJson(responseString.split("~")[1], type);
+                ObservableList < MyDataType > items = FXCollections.observableArrayList();
+                userColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getUser()));
+                addressColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getAddress()));
+                for (String user : users) {
+                    items.add(new MyDataType(user, "localhost:" + (Integer.parseInt(user.split("user")[1]) + 12000)));
+                }
+                informationTable.setItems(items);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        informationTable.setItems(list);
+    }
+
+    @FXML public void selectFile() {
+        FileChooser fileChooser = new FileChooser();
+        selectedFile = fileChooser.showOpenDialog(selectFileButton.getScene().getWindow());
+        fileLabel.setText(selectedFile.getName());
+    }
+
+    public void goToDownload() {
+        Stage stage = (Stage) uploadButton.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/downloadPage.fxml"));
+        try {
+            Parent root = (Parent) loader.load();
+            Scene scene = new Scene(root, 700, 500);
+            stage.setScene(scene);
+            DownloadController controller = loader.<DownloadController>getController();
+            controller.setClientController(clientController);
+            stage.setOnCloseRequest(event -> {
+                requestsSender.logoutRequest(clientController.getEmail());
+            });
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

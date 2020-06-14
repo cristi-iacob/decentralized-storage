@@ -1,5 +1,6 @@
 package server.service;
 
+import com.google.gson.Gson;
 import files.FilesUtils;
 import files.split.BitwiseSplitManager;
 import files.split.SplitManager;
@@ -56,7 +57,11 @@ public class TransferService {
                 }
             }
 
-            return commonFileName;
+            ArrayList <String> names = new ArrayList<>();
+            for (Integer peer : peers) {
+                names.add(userRepository.get(peer).getEmail());
+            }
+            return commonFileName + "~" + new Gson().toJson(names);
         } catch (Exception e) {
             e.printStackTrace();
         }

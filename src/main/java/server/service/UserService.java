@@ -23,8 +23,12 @@ public class UserService {
     public String login(String email, String password) {
         User user = userRepository.getUserByEmailAndPassword(email, password);
 
-        if (user == null || user.isOnline()) {
+        if (user == null) {
             return null;
+        }
+
+        if (user.isOnline()) {
+            return "-1";
         }
 
         user.setOnline(true);
@@ -63,6 +67,10 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.getAllOnlineUsers();
+    }
+
+    public List<User> getUsersSortedByRelativeTimezone(int timezone) {
+        return userRepository.getUsersSortedByTimezone(timezone);
     }
 
     public void allonline() {

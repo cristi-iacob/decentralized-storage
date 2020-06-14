@@ -22,6 +22,9 @@ public class User implements Serializable, HasId {
     @Column(name = "online")
     private boolean online;
 
+    @Column(name = "timezone")
+    private int timezone;
+
     public int getId() {
         return id;
     }
@@ -52,5 +55,13 @@ public class User implements Serializable, HasId {
 
     public void setOnline(boolean online) {
         this.online = online;
+    }
+
+    public int getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(int timezone) {
+        this.timezone = timezone;
     }
 }

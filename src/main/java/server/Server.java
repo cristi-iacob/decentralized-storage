@@ -38,7 +38,7 @@ public class Server {
         }
     }
 
-    @GetMapping(value = "/download")
+    @PostMapping(value = "/download")
     public @ResponseBody byte[]
     downloadFile(@RequestParam("client") String client,
                  @RequestParam("filename") String filename) {
@@ -58,13 +58,14 @@ public class Server {
         try {
             String loginResult = userService.login(username, password);
 
-            if (loginResult != null) {
-                return new ResponseEntity<>(loginResult, HttpStatus.OK);
-            } else {
+            if (loginResult == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            } else if (loginResult.equals("-1")) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<>(loginResult, HttpStatus.OK);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
